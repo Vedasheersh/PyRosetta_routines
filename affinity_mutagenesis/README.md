@@ -12,4 +12,9 @@ Inputs:-
   2. Output score file containing all rosetta score-terms (also interaction energy)
   3. Log file containing designed sequences vs (total_energy , interaction_energy) in a csv format
   
+ Protocol description:- 
+  1. Input PDB will be minimized and docked according to J. Gray et al. 2003 to calculate WT- total_energy and interaction_energy
+  2. MonteCarlo annealing based RosettaDesign is carried out for all residues within contact distance from Epitope residues
+  3. Designed sequence is re-docked to calculate total_energy and interaction_energy
+  
   
