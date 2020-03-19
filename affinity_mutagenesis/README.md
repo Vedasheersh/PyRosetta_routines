@@ -18,3 +18,4 @@ Inputs:-
   3. Designed sequence is re-docked to calculate total_energy and interaction_energy
   
   
+NOTE:- The same script can be used to design antigen epitope residues by specifying design_antigen=True
