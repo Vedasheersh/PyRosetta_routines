@@ -169,7 +169,7 @@ class AffMut(object):
 
         packer.apply(self.pose)
 
-def protocol(input_pdb,epitopes,antibody,antigen,njobs=100,outname='output',logfile='log'):
+def protocol(input_pdb,epitopes,antibody,antigen,njobs=100,outname='output',logfile='log',design_antigen=False):
     
     fscore = open('{0}.sc'.format(outname),'w')
     flog = open(logfile,'w')
@@ -187,8 +187,9 @@ def protocol(input_pdb,epitopes,antibody,antigen,njobs=100,outname='output',logf
     flog.write('{0},{1},{2}\n'.format(affmut.pose.sequence(),energies['wt_total'],energies['wt_inter']))
     scores['WT'] = affmut.pose.scores
     
-    for job in range(njobs):   
-        affmut.design()
+    for job in range(njobs):  
+        if design_antigen: affmut.design(antibody=False,antigen=True)
+        else: affmut.design()
         affmut.redock()
         ener = affmut.calc_energy()
         energies['mut_total'].append(ener)
@@ -197,7 +198,7 @@ def protocol(input_pdb,epitopes,antibody,antigen,njobs=100,outname='output',logf
         flog.write('{0},{1},{2}\n'.format(affmut.pose.sequence(),ener,inter))
         
         affmut.pose.pdb_info().name(outname + '_' + str(job))
-        affmut.dump_pdb(outname + '_' + str(job)+'.pdb')
+        affmut.pose.dump_pdb(outname + '_' + str(job)+'.pdb')
         scores[outname + '_' + str(job)] = affmut.pose.scores
         affmut.pose.clear()
     
@@ -218,4 +219,4 @@ if __name__ == '__main__':
     	ANTIBODY = 'HK'
 
     	affmut,energies = protocol(INPUT_PDB,EPITOPES,ANTIBODY,ANTIGEN,njobs=100,\
-    	outname='WT1_Set{}'.format(j),logfile='WT1_Set{}.log'.format(j))
+    	outname='WT1_Set{}'.format(j),logfile='WT1_Set{}.log'.format(j),design_antigen=False)
